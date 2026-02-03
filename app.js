@@ -1,142 +1,173 @@
-let slideIndex = 0;
+let i = 0;
 let flow = [];
 
-const state = {
-  approach: null,
-  beat: "",
-  lyrics: "",
-  melody: "",
-  hook: "",
-  verse: ""
+const song = {
+  artist: "",
+  title: "",
+  about: "",
+  keywords: ["", "", ""],
+  mood: "",
+  tone: "",
+  genre: "",
+  intent: "",
+  entry: "",
+  structure: "",
+  sections: {},
 };
 
 // autosave
-const saved = localStorage.getItem("songSlides");
-if (saved) Object.assign(state, JSON.parse(saved));
+const saved = localStorage.getItem("songStudio");
+if (saved) Object.assign(song, JSON.parse(saved));
 function save() {
-  localStorage.setItem("songSlides", JSON.stringify(state));
+  localStorage.setItem("songStudio", JSON.stringify(song));
 }
 
 const slide = document.getElementById("slide");
 const next = document.getElementById("next");
-const prev = document.getElementById("prev");
+const back = document.getElementById("back");
 
-// -------- SLIDES --------
+/* ---------------- SLIDES ---------------- */
 
-function slideReset() {
+function welcome() {
   slide.innerHTML = `
-    <h1>Creative Reset</h1>
-    <p>Empty your mind. No structure yet.</p>
-    <textarea></textarea>
+    <h1>Welcome</h1>
+    <p>
+      This is a quiet space for building songs with intention.
+      Take your time. Nothing here is rushed.
+    </p>
+    <p style="opacity:0.6">Each song is treated as if it matters.</p>
   `;
 }
 
-function slideApproach() {
+function identity() {
   slide.innerHTML = `
-    <h1>How do you want to start?</h1>
+    <h2>Session Identity</h2>
+    <input placeholder="Artist name" value="${song.artist}"
+      oninput="song.artist=this.value; save()" />
+    <input placeholder="Song title" value="${song.title}"
+      oninput="song.title=this.value; save()" />
+  `;
+}
 
-    <div class="choice">
-      <label><input type="radio" name="a" value="beat"> Beat First</label><br><br>
-      <label><input type="radio" name="a" value="lyrics"> Lyrics First</label><br><br>
-      <label><input type="radio" name="a" value="melody"> Melody First</label>
+function aboutSong() {
+  slide.innerHTML = `
+    <h2>This song is about</h2>
+    <textarea placeholder="One clear sentence."
+      oninput="song.about=this.value; save()">${song.about}</textarea>
+  `;
+}
+
+function keywords() {
+  slide.innerHTML = `
+    <h2>Keywords</h2>
+    <p>3 emotional or thematic anchors.</p>
+    <div class="tag-row">
+      <input value="${song.keywords[0]}" oninput="song.keywords[0]=this.value; save()" />
+      <input value="${song.keywords[1]}" oninput="song.keywords[1]=this.value; save()" />
+      <input value="${song.keywords[2]}" oninput="song.keywords[2]=this.value; save()" />
     </div>
   `;
 }
 
-function slideBeat() {
+function moodToneGenre() {
   slide.innerHTML = `
-    <h1>Beat First</h1>
-    <p>Describe tempo, bounce, and mood.</p>
-    <textarea oninput="state.beat=this.value; save()">${state.beat}</textarea>
+    <h2>Mood · Tone · Genre</h2>
+    <input placeholder="Mood (e.g. calm, intense, reflective)"
+      value="${song.mood}" oninput="song.mood=this.value; save()" />
+    <input placeholder="Tone (e.g. intimate, confident, restrained)"
+      value="${song.tone}" oninput="song.tone=this.value; save()" />
+    <input placeholder="Genre (any genre)"
+      value="${song.genre}" oninput="song.genre=this.value; save()" />
   `;
 }
 
-function slideLyrics() {
+function intent() {
   slide.innerHTML = `
-    <h1>Lyrics First</h1>
-    <p>Write raw lines without judging.</p>
-    <textarea oninput="state.lyrics=this.value; save()">${state.lyrics}</textarea>
+    <h2>Intent & Necessity</h2>
+    <textarea placeholder="Why does this song need to exist?"
+      oninput="song.intent=this.value; save()">${song.intent}</textarea>
   `;
 }
 
-function slideMelody() {
+function entryMode() {
   slide.innerHTML = `
-    <h1>Melody First</h1>
-    <p>Describe the melody and emotional shape.</p>
-    <textarea oninput="state.melody=this.value; save()">${state.melody}</textarea>
+    <h2>How do you want to start?</h2>
+    <select onchange="song.entry=this.value; save()">
+      <option value="">Choose</option>
+      <option value="beat">Beat first</option>
+      <option value="lyrics">Lyrics first</option>
+      <option value="melody">Melody first</option>
+    </select>
   `;
 }
 
-function slideHook() {
+function structure() {
   slide.innerHTML = `
-    <h1>Hook</h1>
-    <p>The core idea of the song.</p>
-    <textarea oninput="state.hook=this.value; save()">${state.hook}</textarea>
+    <h2>Song Structure</h2>
+    <select onchange="song.structure=this.value; save()">
+      <option value="">Choose structure</option>
+      <option value="HVHVH">Hook – Verse – Hook – Verse – Hook</option>
+      <option value="HVBH">Hook – Verse – Bridge – Hook</option>
+      <option value="V">Verse only</option>
+    </select>
   `;
 }
 
-function slideVerse() {
+function writeSection(name) {
+  if (!song.sections[name]) song.sections[name] = "";
   slide.innerHTML = `
-    <h1>Verse</h1>
-    <p>Develop or deepen the idea.</p>
-    <textarea oninput="state.verse=this.value; save()">${state.verse}</textarea>
+    <p style="opacity:0.6">${song.about}</p>
+    <h1>${name.toUpperCase()}</h1>
+    <textarea
+      oninput="song.sections['${name}']=this.value; save()">
+${song.sections[name]}</textarea>
   `;
 }
 
-function slideFinal() {
+function finalView() {
   slide.innerHTML = `
-    <h1>Final Draft</h1>
-    <pre>
-HOOK:
-${state.hook}
-
-VERSE:
-${state.verse}
-    </pre>
+    <h2>${song.title}</h2>
+    <p><strong>${song.artist}</strong></p>
+    <p><em>${song.about}</em></p>
+    <pre>${Object.entries(song.sections)
+      .map(([k,v]) => k.toUpperCase()+":\n"+v)
+      .join("\n\n")}</pre>
   `;
 }
 
-// -------- FLOW BUILDING --------
+/* ---------------- FLOW ---------------- */
 
-function buildFlow(choice) {
-  if (choice === "beat") {
-    flow = [slideReset, slideApproach, slideBeat, slideHook, slideVerse, slideFinal];
-  }
-  if (choice === "lyrics") {
-    flow = [slideReset, slideApproach, slideLyrics, slideHook, slideVerse, slideFinal];
-  }
-  if (choice === "melody") {
-    flow = [slideReset, slideApproach, slideMelody, slideHook, slideVerse, slideFinal];
-  }
-}
-
-// -------- NAV --------
+flow = [
+  welcome,
+  identity,
+  aboutSong,
+  keywords,
+  moodToneGenre,
+  intent,
+  entryMode,
+  structure,
+  () => writeSection("hook"),
+  () => writeSection("verse"),
+  finalView
+];
 
 function render() {
-  flow[slideIndex]();
+  flow[i]();
   save();
 }
 
 next.onclick = () => {
-  if (flow[slideIndex] === slideApproach) {
-    const selected = document.querySelector('input[name="a"]:checked');
-    if (!selected) return alert("Choose one");
-    state.approach = selected.value;
-    buildFlow(state.approach);
-  }
-  if (slideIndex < flow.length - 1) {
-    slideIndex++;
+  if (i < flow.length - 1) {
+    i++;
     render();
   }
 };
 
-prev.onclick = () => {
-  if (slideIndex > 0) {
-    slideIndex--;
+back.onclick = () => {
+  if (i > 0) {
+    i--;
     render();
   }
 };
 
-// initial
-flow = [slideReset, slideApproach];
 render();
