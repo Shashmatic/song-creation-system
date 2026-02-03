@@ -5,273 +5,278 @@ const song = {
   artist: "",
   title: "",
   about: "",
-  keywords: ["", "", ""],
+  keywords: {
+    emotion: "",
+    imagery: "",
+    conflict: "",
+    perspective: "",
+    takeaway: ""
+  },
   mood: "",
   tone: "",
   genre: "",
   intent: "",
-  entry: "",
   emotionStart: "",
   emotionEnd: "",
-  structure: "",
-  purposes: {},
+  entry: "",
+  structureType: "",
+  customStructure: [],
+  sectionPurpose: {},
   sections: {}
 };
 
-// autosave
-const saved = localStorage.getItem("songStudioMaster");
+const saved = localStorage.getItem("SongStudioFinal");
 if (saved) Object.assign(song, JSON.parse(saved));
 function save() {
-  localStorage.setItem("songStudioMaster", JSON.stringify(song));
+  localStorage.setItem("SongStudioFinal", JSON.stringify(song));
 }
 
 const slide = document.getElementById("slide");
 const next = document.getElementById("next");
 const back = document.getElementById("back");
 
-function helper(text) {
-  return `<div class="helper">${text}</div>`;
-}
+function helper(t){ return `<div class="helper">${t}</div>`; }
 
-/* ───────────── SLIDES ───────────── */
+/* ---------- SLIDES ---------- */
 
-function welcome() {
+function welcome(){
   slide.innerHTML = `
     <h1>Welcome</h1>
-    <p>This is a quiet space for building songs with intention.</p>
-    <p style="opacity:.55">Take your time. Every song here is treated seriously.</p>
+    <p>This is a focused space to build songs with intention.</p>
+    <p style="opacity:.5">Nothing here is rushed. Every decision matters.</p>
   `;
 }
 
-function identity() {
+function identity(){
   slide.innerHTML = `
     <h2>Session Identity</h2>
     <input placeholder="Artist name" value="${song.artist}"
-      oninput="song.artist=this.value; save()" />
+      oninput="song.artist=this.value;save()" />
     <input placeholder="Song title" value="${song.title}"
-      oninput="song.title=this.value; save()" />
-    ${(!song.artist || !song.title) ? helper("Name the work before shaping it.") : ""}
+      oninput="song.title=this.value;save()" />
+    ${(!song.artist || !song.title)?helper("Name the work before shaping it."):""}
   `;
 }
 
-function aboutSong() {
+function about(){
   slide.innerHTML = `
     <h2>This song is about</h2>
     <textarea placeholder="One clear sentence."
-      oninput="song.about=this.value; save()">${song.about}</textarea>
-    ${(!song.about) ? helper("Clarity here prevents empty writing later.") : ""}
+      oninput="song.about=this.value;save()">${song.about}</textarea>
+    ${(!song.about)?helper("Clarity here prevents confusion later."):""}
   `;
 }
 
-function keywords() {
+function keywordDetails(){
   slide.innerHTML = `
-    <h2>Keywords</h2>
-    <p>Emotional or thematic anchors.</p>
-    <div class="tag-row">
-      <input value="${song.keywords[0]}" oninput="song.keywords[0]=this.value; save()" />
-      <input value="${song.keywords[1]}" oninput="song.keywords[1]=this.value; save()" />
-      <input value="${song.keywords[2]}" oninput="song.keywords[2]=this.value; save()" />
-    </div>
-    ${(song.keywords.filter(k => k.trim()).length < 2)
-      ? helper("At least two anchors are required.") : ""}
+    <h2>Song Keywords</h2>
+    <p>Define the inner engine of the song.</p>
+
+    <input placeholder="Primary emotion"
+      value="${song.keywords.emotion}"
+      oninput="song.keywords.emotion=this.value;save()" />
+
+    <input placeholder="Imagery / symbols"
+      value="${song.keywords.imagery}"
+      oninput="song.keywords.imagery=this.value;save()" />
+
+    <input placeholder="Core conflict"
+      value="${song.keywords.conflict}"
+      oninput="song.keywords.conflict=this.value;save()" />
+
+    <input placeholder="Point of view (I / you / observer)"
+      value="${song.keywords.perspective}"
+      oninput="song.keywords.perspective=this.value;save()" />
+
+    <input placeholder="Listener takeaway"
+      value="${song.keywords.takeaway}"
+      oninput="song.keywords.takeaway=this.value;save()" />
+
+    ${(
+      !song.keywords.emotion ||
+      !song.keywords.conflict ||
+      !song.keywords.takeaway
+    ) ? helper("Emotion, conflict, and takeaway are required.") : ""}
   `;
 }
 
-function moodToneGenre() {
+function moodToneGenre(){
   slide.innerHTML = `
     <h2>Mood · Tone · Genre</h2>
     <input placeholder="Mood (emotional atmosphere)"
-      value="${song.mood}" oninput="song.mood=this.value; save()" />
+      value="${song.mood}" oninput="song.mood=this.value;save()" />
     <input placeholder="Tone (how it speaks)"
-      value="${song.tone}" oninput="song.tone=this.value; save()" />
+      value="${song.tone}" oninput="song.tone=this.value;save()" />
     <input placeholder="Genre (any genre)"
-      value="${song.genre}" oninput="song.genre=this.value; save()" />
-    ${(!song.mood || !song.tone)
-      ? helper("Mood and tone define how this song breathes.") : ""}
+      value="${song.genre}" oninput="song.genre=this.value;save()" />
+    ${(!song.mood || !song.tone)?helper("Mood and tone must be defined."):""}
   `;
 }
 
-function intent() {
+function intent(){
   slide.innerHTML = `
     <h2>Intent</h2>
-    <textarea placeholder="Why does this song need to exist?"
-      oninput="song.intent=this.value; save()">${song.intent}</textarea>
+    <textarea placeholder="Why must this song exist?"
+      oninput="song.intent=this.value;save()">${song.intent}</textarea>
   `;
 }
 
-function emotionalArc() {
+function emotionalArc(){
   slide.innerHTML = `
     <h2>Emotional Arc</h2>
     <input placeholder="Emotion at the start"
-      value="${song.emotionStart}" oninput="song.emotionStart=this.value; save()" />
+      value="${song.emotionStart}"
+      oninput="song.emotionStart=this.value;save()" />
     <input placeholder="Emotion at the end"
-      value="${song.emotionEnd}" oninput="song.emotionEnd=this.value; save()" />
+      value="${song.emotionEnd}"
+      oninput="song.emotionEnd=this.value;save()" />
     ${(!song.emotionStart || !song.emotionEnd)
-      ? helper("Songs move. Decide where.") : ""}
+      ?helper("Songs move emotionally. Define the shift."):""}
   `;
 }
 
-function entryMode() {
+function entryMode(){
   slide.innerHTML = `
-    <h2>How do you want to begin?</h2>
-    <select onchange="song.entry=this.value; save()">
-      <option value="">Choose entry mode</option>
+    <h2>How do you begin?</h2>
+    <select onchange="song.entry=this.value;save()">
+      <option value="">Choose</option>
       <option value="beat">Beat first</option>
       <option value="lyrics">Lyrics first</option>
       <option value="melody">Melody first</option>
     </select>
-    ${(!song.entry) ? helper("Different beginnings shape different songs.") : ""}
+    ${(!song.entry)?helper("Beginning shapes the song."):""}
   `;
 }
 
-/* ── ENTRY MODE BRANCHES ── */
-
-function beatFirst() {
-  slide.innerHTML = `
-    <h2>Beat Foundation</h2>
-    <textarea placeholder="Tempo, groove, bounce, energy."
-      oninput="song.beatNotes=this.value; save()">${song.beatNotes || ""}</textarea>
-  `;
+function entryDetail(){
+  if(song.entry==="beat"){
+    slide.innerHTML=`
+      <h2>Beat Foundation</h2>
+      <textarea placeholder="Tempo, rhythm, energy"
+        oninput="song.beatNotes=this.value;save()">${song.beatNotes||""}</textarea>
+    `;
+  }
+  if(song.entry==="lyrics"){
+    slide.innerHTML=`
+      <h2>Raw Lyrics</h2>
+      <textarea placeholder="No structure, no filter"
+        oninput="song.rawLyrics=this.value;save()">${song.rawLyrics||""}</textarea>
+    `;
+  }
+  if(song.entry==="melody"){
+    slide.innerHTML=`
+      <h2>Melody Shape</h2>
+      <textarea placeholder="Rise, fall, repetition"
+        oninput="song.melodyNotes=this.value;save()">${song.melodyNotes||""}</textarea>
+    `;
+  }
 }
 
-function lyricsFirst() {
-  slide.innerHTML = `
-    <h2>Raw Lyrics</h2>
-    <textarea placeholder="No structure. No judgment."
-      oninput="song.rawLyrics=this.value; save()">${song.rawLyrics || ""}</textarea>
-  `;
-}
-
-function melodyFirst() {
-  slide.innerHTML = `
-    <h2>Melody Shape</h2>
-    <textarea placeholder="Describe rise, fall, repetition."
-      oninput="song.melodyNotes=this.value; save()">${song.melodyNotes || ""}</textarea>
-  `;
-}
-
-/* ── STRUCTURE ── */
-
-function structure() {
-  slide.innerHTML = `
+function structureChoice(){
+  slide.innerHTML=`
     <h2>Structure</h2>
-    <select onchange="song.structure=this.value; save()">
-      <option value="">Choose structure</option>
-      <option value="HVHVH">Hook – Verse – Hook – Verse – Hook</option>
-      <option value="HVBH">Hook – Verse – Bridge – Hook</option>
-      <option value="V">Verse only</option>
+    <select onchange="song.structureType=this.value;save()">
+      <option value="">Choose</option>
+      <option value="standard">Standard</option>
+      <option value="custom">Custom</option>
     </select>
-    ${(!song.structure) ? helper("Structure gives the song bones.") : ""}
+    ${(!song.structureType)?helper("Structure is mandatory."):""}
   `;
 }
 
-function sectionPurpose(name) {
-  if (!song.purposes[name]) song.purposes[name] = "";
-  slide.innerHTML = `
+function customStructure(){
+  slide.innerHTML=`
+    <h2>Custom Structure</h2>
+    <p>Enter sections in order, separated by commas.</p>
+    <input placeholder="hook, verse1, verse2, bridge, hook"
+      value="${song.customStructure.join(",")}"
+      oninput="song.customStructure=this.value.split(',').map(s=>s.trim());save()" />
+    ${(song.customStructure.length<1)?helper("At least one section required."):""}
+  `;
+}
+
+function sectionPurpose(name){
+  slide.innerHTML=`
     <h2>${name.toUpperCase()} · Purpose</h2>
-    <textarea placeholder="What does this section do?"
-      oninput="song.purposes['${name}']=this.value; save()">
-${song.purposes[name]}</textarea>
-    ${(!song.purposes[name]) ? helper("Every section must earn its place.") : ""}
+    <textarea placeholder="Why does this section exist?"
+      oninput="song.sectionPurpose['${name}']=this.value;save()">
+${song.sectionPurpose[name]||""}</textarea>
+    ${(!song.sectionPurpose[name])?helper("Purpose must be defined."):""}
   `;
 }
 
-function writeSection(name) {
-  if (!song.sections[name]) song.sections[name] = "";
-  slide.innerHTML = `
+function writeSection(name){
+  slide.innerHTML=`
     <p style="opacity:.5">${song.about}</p>
     <h1>${name.toUpperCase()}</h1>
-    <textarea placeholder="Write with intention."
-      oninput="song.sections['${name}']=this.value; save()">
-${song.sections[name]}</textarea>
+    <textarea placeholder="Write with intent"
+      oninput="song.sections['${name}']=this.value;save()">
+${song.sections[name]||""}</textarea>
+    ${(!song.sections[name])?helper("Write something to proceed."):""}
   `;
 }
 
-function refinement() {
-  slide.innerHTML = `
-    <h2>Refinement</h2>
-    <textarea placeholder="What line is weakest? What should be cut?"
-      oninput="song.refinement=this.value; save()">${song.refinement || ""}</textarea>
-  `;
-}
-
-function finalView() {
-  slide.innerHTML = `
+function finalView(){
+  slide.innerHTML=`
     <h2>${song.title}</h2>
     <p><strong>${song.artist}</strong></p>
     <p><em>${song.about}</em></p>
     <pre>${Object.entries(song.sections)
-      .map(([k,v]) => k.toUpperCase()+":\n"+v)
-      .join("\n\n")}</pre>
+      .map(([k,v])=>k.toUpperCase()+":\n"+v).join("\n\n")}</pre>
   `;
 }
 
-/* ───────────── FLOW BUILD ───────────── */
+/* ---------- FLOW ---------- */
 
-function buildFlow() {
+function buildFlow(){
   flow = [
     welcome,
     identity,
-    aboutSong,
-    keywords,
+    about,
+    keywordDetails,
     moodToneGenre,
     intent,
     emotionalArc,
-    entryMode
+    entryMode,
+    entryDetail,
+    structureChoice
   ];
 
-  if (song.entry === "beat") flow.push(beatFirst);
-  if (song.entry === "lyrics") flow.push(lyricsFirst);
-  if (song.entry === "melody") flow.push(melodyFirst);
+  if(song.structureType==="custom"){
+    flow.push(customStructure);
+    song.customStructure.forEach(s=>{
+      flow.push(()=>sectionPurpose(s));
+      flow.push(()=>writeSection(s));
+    });
+  }
 
-  flow.push(structure);
-
-  const sections =
-    song.structure === "HVHVH" ? ["hook","verse1","verse2"] :
-    song.structure === "HVBH" ? ["hook","verse","bridge"] :
-    ["verse"];
-
-  sections.forEach(s => flow.push(() => sectionPurpose(s)));
-  sections.forEach(s => flow.push(() => writeSection(s)));
-
-  flow.push(refinement, finalView);
+  flow.push(finalView);
 }
 
-/* ───────────── NAV ───────────── */
-
-function canProceed() {
-  if (step === 1) return song.artist && song.title;
-  if (step === 2) return song.about;
-  if (step === 3) return song.keywords.filter(k=>k.trim()).length >= 2;
-  if (step === 4) return song.mood && song.tone;
-  if (step === 6) return song.emotionStart && song.emotionEnd;
-  if (step === 7) return song.entry;
-  if (flow[step] === structure) return song.structure;
+function canProceed(){
+  if(step===1) return song.artist && song.title;
+  if(step===2) return song.about;
+  if(step===3) return song.keywords.emotion && song.keywords.conflict && song.keywords.takeaway;
+  if(step===4) return song.mood && song.tone;
+  if(step===6) return song.emotionStart && song.emotionEnd;
+  if(step===7) return song.entry;
+  if(step===9) return song.structureType;
   return true;
 }
 
-function render() {
+function render(){
+  buildFlow();
   flow[step]();
   save();
 }
 
-next.onclick = () => {
-  if (!canProceed()) return;
-  if (flow[step] === entryMode || flow[step] === structure) {
-    buildFlow();
-  }
-  if (step < flow.length - 1) {
-    step++;
-    render();
-  }
+next.onclick=()=>{
+  if(!canProceed()) return;
+  if(step<flow.length-1){ step++; render(); }
 };
 
-back.onclick = () => {
-  if (step > 0) {
-    step--;
-    render();
-  }
+back.onclick=()=>{
+  if(step>0){ step--; render(); }
 };
 
-buildFlow();
 render();
