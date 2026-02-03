@@ -2,23 +2,36 @@ body {
   margin: 0;
   background: #0b0b0b;
   color: #eaeaea;
-  font-family: Arial, sans-serif;
+  font-family: Inter, sans-serif;
+  height: 100vh;
+  overflow: hidden;
 }
 
-#app {
-  max-width: 900px;
-  margin: auto;
-  padding: 40px;
+#slide {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+  text-align: center;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 30px;
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 18px;
+  opacity: 0.8;
+  max-width: 700px;
 }
 
 textarea {
-  width: 100%;
-  min-height: 160px;
+  margin-top: 20px;
+  width: 70%;
+  height: 160px;
   background: #111;
   color: #fff;
   border: 1px solid #333;
@@ -26,21 +39,23 @@ textarea {
   font-size: 16px;
 }
 
+.choice {
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.nav {
+  position: fixed;
+  bottom: 30px;
+  right: 40px;
+}
+
 button {
   background: #b30000;
   color: white;
   border: none;
-  padding: 12px 26px;
+  padding: 12px 24px;
+  margin-left: 10px;
   font-size: 16px;
   cursor: pointer;
-}
-
-button:hover {
-  background: #e00000;
-}
-
-.nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
 }
