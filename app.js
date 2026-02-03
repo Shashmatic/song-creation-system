@@ -22,14 +22,27 @@ const song = {
   entryNotes: "",
   structure: [],
   purposes: {},
-  lyrics: {}
+  lyrics: {},
+  craft: {
+    rhymeScheme: "",
+    rhymeDensity: "",
+    vocabField: "",
+    metaphors: "",
+    references: "",
+    imageryBank: ""
+  },
+  review: {
+    strongestLine: "",
+    weakestLine: "",
+    clarity: "",
+    honesty: "",
+    improvement: ""
+  }
 };
 
-const saved = localStorage.getItem("SongStudioMASTER");
+const saved = localStorage.getItem("SongStudioULTIMATE");
 if (saved) Object.assign(song, JSON.parse(saved));
-function save() {
-  localStorage.setItem("SongStudioMASTER", JSON.stringify(song));
-}
+function save(){ localStorage.setItem("SongStudioULTIMATE", JSON.stringify(song)); }
 
 const slide = document.getElementById("slide");
 const next = document.getElementById("next");
@@ -37,17 +50,17 @@ const back = document.getElementById("back");
 
 const h = t => `<div class="helper">${t}</div>`;
 
-/* ---------- SLIDES ---------- */
+/* ---------- CORE SLIDES ---------- */
 
-function welcome() {
+function welcome(){
   slide.innerHTML = `
     <h1>Welcome</h1>
     <p>This is a deliberate space for writing songs that last.</p>
-    <p style="opacity:.5">Every step matters.</p>
+    <p style="opacity:.5">Every decision compounds.</p>
   `;
 }
 
-function identity() {
+function identity(){
   slide.innerHTML = `
     <h2>Session Identity</h2>
     <input placeholder="Artist name" value="${song.artist}"
@@ -58,20 +71,19 @@ function identity() {
   `;
 }
 
-function about() {
+function about(){
   slide.innerHTML = `
     <h2>This song is about</h2>
     <textarea placeholder="One clear sentence."
       oninput="song.about=this.value;save()">${song.about}</textarea>
-    ${!song.about?h("Define the core truth of the song."):""}
+    ${!song.about?h("Define the core truth."):""}
   `;
 }
 
-function keywords() {
+function keywords(){
   slide.innerHTML = `
     <h2>Core Keywords</h2>
-    <p>Define the internal engine of the song.</p>
-    <div class="tag-grid">
+    <div class="grid">
       <input placeholder="Primary emotion" value="${song.keywords.emotion}"
         oninput="song.keywords.emotion=this.value;save()">
       <input placeholder="Core conflict" value="${song.keywords.conflict}"
@@ -88,7 +100,7 @@ function keywords() {
   `;
 }
 
-function moodToneGenre() {
+function moodToneGenre(){
   slide.innerHTML = `
     <h2>Mood · Tone · Genre</h2>
     <input placeholder="Mood" value="${song.mood}"
@@ -101,7 +113,7 @@ function moodToneGenre() {
   `;
 }
 
-function intent() {
+function intent(){
   slide.innerHTML = `
     <h2>Intent</h2>
     <textarea placeholder="Why must this song exist?"
@@ -110,7 +122,7 @@ function intent() {
   `;
 }
 
-function emotionalArc() {
+function emotionalArc(){
   slide.innerHTML = `
     <h2>Emotional Arc</h2>
     <input placeholder="Emotion at start" value="${song.emotionStart}"
@@ -121,7 +133,9 @@ function emotionalArc() {
   `;
 }
 
-function entryMode() {
+/* ---------- ENTRY & STRUCTURE ---------- */
+
+function entryMode(){
   slide.innerHTML = `
     <h2>Entry Mode</h2>
     <select onchange="song.entry=this.value;save()">
@@ -134,38 +148,26 @@ function entryMode() {
   `;
 }
 
-function entryDetail() {
+function entryDetail(){
   slide.innerHTML = `
-    <h2>${song.entry.toUpperCase()} Notes</h2>
+    <h2>Starting Material</h2>
     <textarea placeholder="Describe your starting point."
       oninput="song.entryNotes=this.value;save()">${song.entryNotes}</textarea>
-    ${!song.entryNotes?h("Capture the raw starting material."):""}
+    ${!song.entryNotes?h("Capture the raw foundation."):""}
   `;
 }
 
-function structureBuilder() {
+function structureBuilder(){
   slide.innerHTML = `
-    <h2>Structure Builder</h2>
-    <p>Add sections in the exact order you want them.</p>
-    <div class="structure-row">
-      ${["intro","hook","verse","pre-hook","bridge","outro"].map(s=>`
-        <div class="block" onclick="addSection('${s}')">${s}</div>
-      `).join("")}
-    </div>
-    <input placeholder="Current structure (comma separated)"
+    <h2>Structure</h2>
+    <input placeholder="Custom structure (comma separated)"
       value="${song.structure.join(', ')}"
       oninput="song.structure=this.value.split(',').map(s=>s.trim()).filter(Boolean);save()">
     ${song.structure.length<1?h("At least one section required."):""}
   `;
 }
 
-window.addSection = (s)=>{
-  song.structure.push(s);
-  save();
-  structureBuilder();
-};
-
-function sectionPurpose(name) {
+function sectionPurpose(name){
   slide.innerHTML = `
     <h2>${name.toUpperCase()} · Purpose</h2>
     <textarea placeholder="Why does this section exist?"
@@ -175,7 +177,7 @@ ${song.purposes[name]||""}</textarea>
   `;
 }
 
-function writeSection(name) {
+function writeSection(name){
   slide.innerHTML = `
     <p style="opacity:.5">${song.about}</p>
     <h1>${name.toUpperCase()}</h1>
@@ -186,7 +188,48 @@ ${song.lyrics[name]||""}</textarea>
   `;
 }
 
-function finalView() {
+/* ---------- CRAFT ENHANCEMENT ---------- */
+
+function craftTools(){
+  slide.innerHTML = `
+    <h2>Craft & Language</h2>
+    <input placeholder="Rhyme scheme (AABB, multis, free)"
+      value="${song.craft.rhymeScheme}"
+      oninput="song.craft.rhymeScheme=this.value;save()">
+    <input placeholder="Rhyme density (sparse / medium / heavy)"
+      value="${song.craft.rhymeDensity}"
+      oninput="song.craft.rhymeDensity=this.value;save()">
+    <input placeholder="Vocabulary field (street, poetic, technical)"
+      value="${song.craft.vocabField}"
+      oninput="song.craft.vocabField=this.value;save()">
+    <textarea placeholder="Metaphors & comparisons"
+      oninput="song.craft.metaphors=this.value;save()">${song.craft.metaphors}</textarea>
+    <textarea placeholder="Cultural / personal references"
+      oninput="song.craft.references=this.value;save()">${song.craft.references}</textarea>
+    <textarea placeholder="Imagery bank"
+      oninput="song.craft.imageryBank=this.value;save()">${song.craft.imageryBank}</textarea>
+  `;
+}
+
+/* ---------- REVIEW ---------- */
+
+function review(){
+  slide.innerHTML = `
+    <h2>Song Review</h2>
+    <textarea placeholder="Strongest line"
+      oninput="song.review.strongestLine=this.value;save()">${song.review.strongestLine}</textarea>
+    <textarea placeholder="Weakest line"
+      oninput="song.review.weakestLine=this.value;save()">${song.review.weakestLine}</textarea>
+    <textarea placeholder="Is the message clear?"
+      oninput="song.review.clarity=this.value;save()">${song.review.clarity}</textarea>
+    <textarea placeholder="Is this honest?"
+      oninput="song.review.honesty=this.value;save()">${song.review.honesty}</textarea>
+    <textarea placeholder="What would you improve?"
+      oninput="song.review.improvement=this.value;save()">${song.review.improvement}</textarea>
+  `;
+}
+
+function finalView(){
   slide.innerHTML = `
     <h2>${song.title}</h2>
     <p><strong>${song.artist}</strong></p>
@@ -197,7 +240,7 @@ function finalView() {
 
 /* ---------- FLOW ---------- */
 
-function buildFlow() {
+function buildFlow(){
   flow = [
     welcome,
     identity,
@@ -216,10 +259,14 @@ function buildFlow() {
     flow.push(()=>writeSection(s));
   });
 
-  flow.push(finalView);
+  flow.push(
+    craftTools,
+    review,
+    finalView
+  );
 }
 
-function canProceed() {
+function canProceed(){
   if(step===1) return song.artist&&song.title;
   if(step===2) return song.about;
   if(step===3) return song.keywords.emotion&&song.keywords.conflict&&song.keywords.takeaway;
@@ -232,18 +279,18 @@ function canProceed() {
   return true;
 }
 
-function render() {
+function render(){
   buildFlow();
   flow[step]();
   save();
 }
 
-next.onclick = ()=>{
+next.onclick=()=>{
   if(!canProceed()) return;
   if(step<flow.length-1){ step++; render(); }
 };
 
-back.onclick = ()=>{
+back.onclick=()=>{
   if(step>0){ step--; render(); }
 };
 
