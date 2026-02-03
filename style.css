@@ -1,11 +1,9 @@
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #141518, #0c0d10);
-  color: #eaeaea;
+  background: radial-gradient(circle at top, #16171c, #0c0d10);
+  color: #e8e8e8;
   font-family: "Inter", system-ui, sans-serif;
   height: 100vh;
   overflow: hidden;
@@ -14,7 +12,7 @@ body {
 #slide {
   height: 100vh;
   padding: 90px;
-  max-width: 880px;
+  max-width: 900px;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -25,14 +23,12 @@ h1 {
   font-size: 42px;
   font-weight: 500;
   margin-bottom: 10px;
-  letter-spacing: 0.3px;
 }
 
 h2 {
   font-size: 26px;
   font-weight: 400;
   margin-bottom: 12px;
-  opacity: 0.95;
 }
 
 p {
@@ -47,7 +43,7 @@ input, textarea, select {
   background: transparent;
   border: none;
   border-bottom: 1px solid #2a2d35;
-  color: #eaeaea;
+  color: #e8e8e8;
   padding: 12px 6px;
   font-size: 17px;
   outline: none;
@@ -58,13 +54,8 @@ textarea {
   resize: none;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #777;
-}
-
 select {
-  background: #0f1116;
+  background: #101218;
   border: 1px solid #2a2d35;
   padding: 12px;
 }
@@ -82,9 +73,9 @@ select {
 }
 
 button {
-  background: #1a1d24;
-  border: 1px solid #2c3040;
-  color: #eaeaea;
+  background: #1a1d26;
+  border: 1px solid #2f3442;
+  color: #e8e8e8;
   padding: 10px 26px;
   margin-left: 10px;
   font-size: 15px;
@@ -92,7 +83,7 @@ button {
 }
 
 button:hover {
-  background: #242835;
+  background: #232735;
 }
 
 .helper {
