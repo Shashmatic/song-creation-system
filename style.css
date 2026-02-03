@@ -1,47 +1,68 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  background: #0b0b0b;
-  color: #eaeaea;
-  font-family: Inter, sans-serif;
+  background: #0e0f11;
+  color: #e6e6e6;
+  font-family: "Inter", system-ui, sans-serif;
   height: 100vh;
   overflow: hidden;
 }
 
 #slide {
   height: 100vh;
+  padding: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  padding: 60px;
-  text-align: center;
+  max-width: 900px;
+  margin: auto;
 }
 
 h1 {
-  font-size: 42px;
-  margin-bottom: 20px;
+  font-size: 40px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 14px;
 }
 
 p {
-  font-size: 18px;
-  opacity: 0.8;
-  max-width: 700px;
+  font-size: 17px;
+  line-height: 1.6;
+  opacity: 0.85;
+  max-width: 720px;
+}
+
+input, textarea, select {
+  margin-top: 18px;
+  background: #14161a;
+  border: 1px solid #2a2d33;
+  color: #e6e6e6;
+  padding: 14px;
+  font-size: 16px;
+  width: 100%;
 }
 
 textarea {
-  margin-top: 20px;
-  width: 70%;
-  height: 160px;
-  background: #111;
-  color: #fff;
-  border: 1px solid #333;
-  padding: 14px;
-  font-size: 16px;
+  min-height: 160px;
+  resize: none;
 }
 
-.choice {
-  margin-top: 20px;
-  font-size: 20px;
+.tag-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tag-row input {
+  flex: 1;
 }
 
 .nav {
@@ -51,11 +72,15 @@ textarea {
 }
 
 button {
-  background: #b30000;
-  color: white;
-  border: none;
-  padding: 12px 24px;
+  background: #1c1f26;
+  border: 1px solid #2f3340;
+  color: #dcdcdc;
+  padding: 10px 22px;
   margin-left: 10px;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
+}
+
+button:hover {
+  background: #262a33;
 }
